@@ -162,6 +162,7 @@ class CarlaGame(object):
         self.episode_count = 0
         self.frame_count = 0
         self.saver = None
+        self.out_dir = args.location
 
     def execute(self):
         """Launch the PyGame."""
@@ -220,18 +221,18 @@ class CarlaGame(object):
 
         if self.saver is None and self.save_images_to_disk:
             self.saver = [
-                BufferedImageSaver(f'_outs5/ep_{self.episode_count:03d}/CameraDepth/',
+                BufferedImageSaver(f'{self.out_dir}/ep_{self.episode_count:03d}/CameraDepth/',
                                    1000, WINDOW_HEIGHT, WINDOW_WIDTH, 1),
-                BufferedImageSaver(f'_outs5/ep_{self.episode_count:03d}/CameraRGB/',
+                BufferedImageSaver(f'{self.out_dir}/ep_{self.episode_count:03d}/CameraRGB/',
                                    1000, WINDOW_HEIGHT, WINDOW_WIDTH, 3),
-                BufferedImageSaver(f'_outs5/ep_{self.episode_count:03d}/CameraSemSeg/',
+                BufferedImageSaver(f'{self.out_dir}/ep_{self.episode_count:03d}/CameraSemSeg/',
                                    1000, WINDOW_HEIGHT, WINDOW_WIDTH, 1)
                 ]
         elif self.save_images_to_disk:
             for i, image_saver in enumerate(self.saver):
                 image_saver.save()
                 image_saver.reset()
-                image_saver.filename = f'_outs5/ep_{self.episode_count:03d}/' +\
+                image_saver.filename = f'{self.out_dir}/ep_{self.episode_count:03d}/' +\
                                        image_saver.filename[14:]
 
     def _on_loop(self):
@@ -474,6 +475,10 @@ def main():
         action='store_true',
         dest='save_images_to_disk',
         help='save images (and Lidar data if active) to disk')
+    argparser.add_argument(
+        '-l', '--location',
+        dest='location',
+        help='the directory to store the collected data in')
     args = argparser.parse_args()
 
     args.out_filename_format = '_out0/episode_{:0>4d}/{:s}/{:0>6d}'
