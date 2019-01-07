@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import threading
 
 class BufferedImageSaver:
     """
@@ -8,14 +9,14 @@ class BufferedImageSaver:
     """
 
     def __init__(self, filename: str, size: int,
-                 rows: int, cols: int, depth:int):
+                 rows: int, cols: int, depth:int, sensorname: str):
         """An array of shape (size, rows, cols, depth) is created to hold
         incoming images (this is the buffer). `filename` is where the buffer
         will be stored once full.
         """
-        self.filename = filename
+        self.filename = filename + sensorname + '/'
         self.size = size
-        self.sensorname = filename[14: -1]
+        self.sensorname = sensorname
         dtype = np.float32 if self.sensorname == 'CameraDepth' else np.uint8
         self.buffer = np.empty(shape=(size, rows, cols, depth),
                                dtype=dtype)

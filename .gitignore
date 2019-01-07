@@ -1,0 +1,5 @@
+# Jupyter notebook checkpoint files
+**/.ipynb_checkpoints/
+
+# Visual Studio Code config files
+.vscode/

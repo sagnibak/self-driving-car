@@ -76,11 +76,11 @@ def make_carla_settings(args):
     """Make a CarlaSettings object with the settings we need."""
     settings = CarlaSettings()
     settings.set(
-        SynchronousMode=False,
+        SynchronousMode=True,
         SendNonPlayerAgentsInfo=True,
         NumberOfVehicles=5,
         NumberOfPedestrians=30,
-        WeatherId=random.choice([1, 3, 7, 8, 14]),
+        WeatherId=random.choice(list(range(15))),
         QualityLevel=args.quality_level)
     settings.randomize_seeds()
     camera0 = sensor.Camera('CameraRGB')
@@ -88,12 +88,12 @@ def make_carla_settings(args):
     camera0.set_position(2.0, 0.0, 1.4)
     camera0.set_rotation(0.0, 0.0, 0.0)
     settings.add_sensor(camera0)
-    camera1 = sensor.Camera('CameraDepth', PostProcessing='Depth')
-    # camera1.set_image_size(MINI_WINDOW_WIDTH, MINI_WINDOW_HEIGHT)
-    camera1.set_image_size(WINDOW_WIDTH, WINDOW_HEIGHT)
-    camera1.set_position(2.0, 0.0, 1.4)
-    camera1.set_rotation(0.0, 0.0, 0.0)
-    settings.add_sensor(camera1)
+    # camera1 = sensor.Camera('CameraDepth', PostProcessing='Depth')
+    # # camera1.set_image_size(MINI_WINDOW_WIDTH, MINI_WINDOW_HEIGHT)
+    # camera1.set_image_size(WINDOW_WIDTH, WINDOW_HEIGHT)
+    # camera1.set_position(2.0, 0.0, 1.4)
+    # camera1.set_rotation(0.0, 0.0, 0.0)
+    # settings.add_sensor(camera1)
     camera2 = sensor.Camera('CameraSemSeg', PostProcessing='SemanticSegmentation')
     # camera2.set_image_size(MINI_WINDOW_WIDTH, MINI_WINDOW_HEIGHT)
     camera2.set_image_size(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -221,19 +221,19 @@ class CarlaGame(object):
 
         if self.saver is None and self.save_images_to_disk:
             self.saver = [
-                BufferedImageSaver(f'{self.out_dir}/ep_{self.episode_count:03d}/CameraDepth/',
-                                   1000, WINDOW_HEIGHT, WINDOW_WIDTH, 1),
-                BufferedImageSaver(f'{self.out_dir}/ep_{self.episode_count:03d}/CameraRGB/',
-                                   1000, WINDOW_HEIGHT, WINDOW_WIDTH, 3),
-                BufferedImageSaver(f'{self.out_dir}/ep_{self.episode_count:03d}/CameraSemSeg/',
-                                   1000, WINDOW_HEIGHT, WINDOW_WIDTH, 1)
+                # BufferedImageSaver(f'{self.out_dir}5/ep_{self.episode_count:03d}/CameraDepth/',
+                #                    1000, WINDOW_HEIGHT, WINDOW_WIDTH, 1),
+                BufferedImageSaver(f'{self.out_dir}/ep_{self.episode_count:03d}/',
+                                   1000, WINDOW_HEIGHT, WINDOW_WIDTH, 3, 'CameraRGB'),
+                BufferedImageSaver(f'{self.out_dir}/ep_{self.episode_count:03d}/',
+                                   1000, WINDOW_HEIGHT, WINDOW_WIDTH, 1, 'CameraSemSeg')
                 ]
         elif self.save_images_to_disk:
             for i, image_saver in enumerate(self.saver):
                 image_saver.save()
                 image_saver.reset()
                 image_saver.filename = f'{self.out_dir}/ep_{self.episode_count:03d}/' +\
-                                       image_saver.filename[14:]
+                                       image_saver.sensorname + '/'
 
     def _on_loop(self):
         self._timer.tick()
@@ -289,6 +289,10 @@ class CarlaGame(object):
                 for image_saver in self.saver:
                     if image_saver.sensorname == name:
                         image_saver.add_image(measurement.raw_data, name)
+        
+        # change the weather with 4% probability
+        if random.random() < 0.04:
+            self._carla_settings.randomize_weather()
 
         control = self._get_keyboard_control(pygame.key.get_pressed())
         # Set the player position
@@ -478,7 +482,7 @@ def main():
     argparser.add_argument(
         '-l', '--location',
         dest='location',
-        help='the directory to store the collected data in')
+        help='location to store the collected data at')
     args = argparser.parse_args()
 
     args.out_filename_format = '_out0/episode_{:0>4d}/{:s}/{:0>6d}'
