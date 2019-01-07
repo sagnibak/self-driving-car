@@ -4,7 +4,37 @@ This repo contains all the code for the self-driving RC car that I am making as 
 [#100DaysOfMLCode](https://twitter.com/sirajraval/status/1014758160572141568) challenge. Follow
 my progress at [my personal website](https://sagnibak.github.io/) where I am logging milestones
 of this project and also presenting all the information with enough detail to allow anyone to
-follow along if they want.
+follow along if they want to.
+
+## Preliminary Setup
+
+You will need Python 3.6 or later to run all the code in this repository. I love to use
+[f-strings](https://realpython.com/python-f-strings/) that were introduced in Python 3.6, and besides,besides,
+it is always good to use up-to-date versions of software.
+
+I would suggest you to get an [Anaconda Python distribution](https://www.anaconda.com/download/) because
+it gives you easy access to the entire Scientific Python stack and also makes it really easy to manage
+Python environments, even on Windows.
+
+Once you have Anaconda installed, run one of the following from an Anaconda Prompt:
+
+```bash
+conda env create -f environment.yml  # without GPU
+
+conda env create -f environment-gpu.yml  # if you have a GPU
+```
+
+This will create a conda virtual environment called `sdcar` on your machine. You will then want to use
+
+```bash
+activate sdcar
+```
+
+to start working in that environment using the installed packages.
+
+Note that if you get the GPU version of Tensorflow from the `environment-gpu.yml` file, you will also need
+to follow the instructions on the [TensorFlow website](https://www.tensorflow.org/install/gpu)
+in order to allow TensorFlow to use your GPU.
 
 ## CARLA Simulator Scripts
 
