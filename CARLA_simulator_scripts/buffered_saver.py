@@ -1,6 +1,5 @@
 import numpy as np
 import os
-import threading
 
 class BufferedImageSaver:
     """
@@ -27,7 +26,7 @@ class BufferedImageSaver:
         """A BufferedImageSaver is full when `self.index` is one less than
         `self.size`.
         """
-        return self.index == self.size - 1
+        return self.index == self.size
 
     def reset(self):
         self.buffer = np.empty_like(self.buffer)

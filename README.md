@@ -9,7 +9,7 @@ follow along if they want to.
 ## Preliminary Setup
 
 You will need Python 3.6 or later to run all the code in this repository. I love to use
-[f-strings](https://realpython.com/python-f-strings/) that were introduced in Python 3.6, and besides,besides,
+[f-strings](https://realpython.com/python-f-strings/) that were introduced in Python 3.6, and besides,
 it is always good to use up-to-date versions of software.
 
 I would suggest you to get an [Anaconda Python distribution](https://www.anaconda.com/download/) because
@@ -79,7 +79,7 @@ simulator will be launched and a black Pygame window will start. You need to kee
 and drive the car manually using the WASD keys. Once you have collected as much data as you want, simply kill
 the python process and the simulator. In no time you will find a few gigabytes of Numpy arrays (`.npy` files)
 in the `PythonClient/_out` directory. If you are wondering why I chose to save the data as Numpy arrays
-instead of images, then read [the accompanying blogpost]().
+instead of images, then read [the accompanying blogpost](https://sagnibak.github.io/blog/how-to-use-carla/).
 
 You can view the collected data by running the Jupyter Notebook `verify_collected_data.ipynb`. This should also
 be run inside the `PythonClient` directory (or you can modify the code inside the notebook to load saved
